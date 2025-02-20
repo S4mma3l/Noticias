@@ -7,6 +7,8 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Permite commitear y subir cambios
     steps:
       - name: Clonar el Repositorio
         uses: actions/checkout@v3
