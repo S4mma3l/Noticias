@@ -10,8 +10,19 @@ import random
 import nltk
 import json
 
-# Descarga punkt (solo necesita ejecutarse una vez)
-nltk.download('punkt', quiet=True)
+# Descarga punkt (solo necesita ejecutarse una vez, pero no hace daño tenerlo aquí)
+try:
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    nltk.download('wordnet', download_dir='/home/runner/nltk_data')
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt', download_dir='/home/runner/nltk_data')
+try:
+    nltk.data.find('tokenizers/punkt_tab/english.pickle')
+except LookupError:
+    nltk.download('punkt_tab', download_dir='/home/runner/nltk_data')
 
 # Configuración del logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
