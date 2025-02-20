@@ -48,17 +48,28 @@ def extract_article_data(url):
 def check_if_article_exists(title):
     """Comprueba si un artículo con el título dado ya existe en la base de datos."""
     # Configuración de Supabase (movida dentro de la función)
+    logging.info("Comprobando las variables de entorno...")
     SUPABASE_URL = os.environ.get("SUPABASE_URL")
     SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY")
+
+    logging.info(f"SUPABASE_URL: {SUPABASE_URL}")
+    logging.info(f"SUPABASE_ANON_KEY: {SUPABASE_ANON_KEY}")
 
     if not SUPABASE_URL or not SUPABASE_ANON_KEY:
         logging.error("La URL o la clave de Supabase no se encontraron en las variables de entorno")
         return False
 
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+    try:
+        supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+        logging.info("Conexión a Supabase establecida correctamente.")
+    except Exception as e:
+        logging.error(f"Error al conectar con Supabase: {e}")
+        return False
+
     normalized_title = title.lower().strip()
     try:
         response = supabase.table("amenazas").select("*").eq("titulo", normalized_title).execute()
+        logging.info(f"Respuesta de la base de datos: {response.data}")
         return len(response.data) > 0
     except Exception as e:
         logging.error(f"Error al comprobar si existe el artículo en Supabase: {e}")
@@ -67,14 +78,24 @@ def check_if_article_exists(title):
 def scrape_website(website, num_articles=6):
     """Extrae información de un sitio web y devuelve una lista de datos de artículos."""
     # Configuración de Supabase (movida dentro de la función)
+    logging.info("Comprobando las variables de entorno...")
     SUPABASE_URL = os.environ.get("SUPABASE_URL")
     SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY")
+
+    logging.info(f"SUPABASE_URL: {SUPABASE_URL}")
+    logging.info(f"SUPABASE_ANON_KEY: {SUPABASE_ANON_KEY}")
 
     if not SUPABASE_URL or not SUPABASE_ANON_KEY:
         logging.error("La URL o la clave de Supabase no se encontraron en las variables de entorno")
         return []
 
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+    try:
+        supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+        logging.info("Conexión a Supabase establecida correctamente.")
+    except Exception as e:
+        logging.error(f"Error al conectar con Supabase: {e}")
+        return []
+
     try:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -103,6 +124,8 @@ def scrape_website(website, num_articles=6):
         for link in article_links:
             title, summary, publish_date = extract_article_data(link)
             if title and summary:
+                logging.info(f"Título del artículo: {title}")
+
                 if check_if_article_exists(title):
                     logging.info(f"El artículo ya existe: {title}. Omitiendo.")
                     continue
@@ -117,6 +140,13 @@ def scrape_website(website, num_articles=6):
                     "fecha_actualizacion": datetime.utcnow().isoformat()
                 }
                 logging.info(f"Datos a insertar: {data}")
+
+                try:
+                    data_response = supabase.table("amenazas").insert(data, returning="minimal").execute()
+                    logging.info(f"Artículo insertado correctamente: {title}")
+                except Exception as e:
+                    logging.error(f"Error al insertar el artículo en Supabase: {e}")
+                    logging.exception(e)
                 articles_data.append(data)
         return articles_data
 
