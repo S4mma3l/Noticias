@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Artículos Extraídos</title>
+</head>
+<body>
+  <h1>Artículos Extraídos</h1>
+  <ul id="article-list"></ul>
+
+  <script>
+    fetch('data/articles.json')
+      .then(response => response.json())
+      .then(data => {
+        const articleList = document.getElementById('article-list');
+        data.forEach(article => {
+          const listItem = document.createElement('li');
+          listItem.textContent = article.titulo; // O cualquier otro dato que desees mostrar
+          articleList.appendChild(listItem);
+        });
+      });
+  </script>
+</body>
+</html>

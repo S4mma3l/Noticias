@@ -1,0 +1,36 @@
+name: Extraer y Actualizar Datos
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Se ejecuta todos los días a las 6:00 AM UTC
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el Repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+
+      - name: Instalar Dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 newspaper3k supabase
+
+      - name: Ejecutar el Scraper
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: python scraper.py
+
+      - name: Commitear y Pushear Cambios
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add data/articles.json
+          git commit -m "Actualizar datos extraídos" || echo "No hay cambios para commitear"
+          git push origin main
