@@ -22,7 +22,7 @@ jobs:
       - name: Instalar Dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4 newspaper3k supabase
+          pip install requests beautifulsoup4 newspaper3k supabase lxml_html_clean
 
       - name: Ejecutar el Scraper
         env:
