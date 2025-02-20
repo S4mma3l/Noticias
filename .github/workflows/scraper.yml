@@ -1,9 +1,8 @@
-name: Extraer y Actualizar Datos
+name: Scrape and Update Data
 
 on:
   schedule:
-    # - cron: '0 6 * * *'  # Se ejecuta todos los días a las 6:00 AM UTC
-    - cron: '*/5 * * * *'  # Se ejecuta cada 5 minutos
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -36,6 +35,9 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           NLTK_DATA: /home/runner/nltk_data
         run: python scraper.py
+
+      - name: Pull Latest Changes
+        run: git pull origin main
 
       - name: Commit and Push Changes
         run: |
