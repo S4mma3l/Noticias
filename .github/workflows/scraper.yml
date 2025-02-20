@@ -4,6 +4,7 @@ on:
   schedule:
     # - cron: '0 6 * * *'  # Se ejecuta todos los días a las 6:00 AM UTC
     - cron: '*/5 * * * *'  # Se ejecuta cada 5 minutos
+  workflow_dispatch:
 jobs:
   scrape:
     runs-on: ubuntu-latest
