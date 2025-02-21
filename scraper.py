@@ -44,7 +44,7 @@ def extract_article_data(url):
     except Exception as e:
         logging.exception(f"Error inesperado al procesar {url}: {e}")
         return None, None, None
-     
+
 def check_if_article_exists(supabase, title):
     """Comprueba si un artículo con el título dado ya existe en la base de datos."""
     normalized_title = title.lower().strip()
@@ -111,11 +111,10 @@ def scrape_website(website, num_articles_to_scrape=3, max_articles_per_website=1
                 logging.info(f"Procesando nuevo artículo con título (snippet): '{article_title_snippet}' y enlace: {article_link}")
 
                 title, summary, publish_date = extract_article_data(article_link) # Extraer datos completos
-
                 if title and summary: # Verificar que newspaper3k extrajo título y resumen
                     logging.info(f"Título del artículo (newspaper3k) RAW: '{title}'") # NUEVO LOG: Título RAW
                     logging.info(f"Título del artículo (newspaper3k): '{title}'") # Log del título de newspaper3k (normalizado antes en check_if_exists)
-                if check_if_article_exists(supabase, title): # Doble verificación con título completo por si acaso
+                    if check_if_article_exists(supabase, title): # Doble verificación con título completo por si acaso
                         logging.info(f"Artículo con título (newspaper3k) '{title}' ya existe (segunda verificación). Omitiendo.")
                         continue
 
