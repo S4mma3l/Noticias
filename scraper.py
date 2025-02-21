@@ -44,13 +44,16 @@ def extract_article_data(url):
     except Exception as e:
         logging.exception(f"Error inesperado al procesar {url}: {e}")
         return None, None, None
-
+     
 def check_if_article_exists(supabase, title):
     """Comprueba si un artículo con el título dado ya existe en la base de datos."""
     normalized_title = title.lower().strip()
     logging.info(f"Verificando existencia en DB por título (normalizado): '{normalized_title}'")
     try:
-        response = supabase.table("amenazas").select("*").eq("titulo", normalized_title).execute()
+        query = supabase.table("amenazas").select("*").eq("titulo", normalized_title) # Construye el objeto de consulta
+        query_url = str(query) # Convierte el objeto de consulta a una cadena URL para el registro
+        logging.info(f"Consulta Supabase generada: {query_url}") # Registra la URL de consulta generada
+        response = query.execute() # Ejecuta la consulta
         logging.info(f"Respuesta de la base de datos para título normalizado '{normalized_title}': {response}")
         return len(response.data) > 0
     except Exception as e:
