@@ -1,5 +1,3 @@
---- START OF FILE scraper.py ---
-
 import requests
 from bs4 import BeautifulSoup
 from supabase import create_client, Client
