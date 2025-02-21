@@ -48,31 +48,29 @@ def extract_article_data(url):
 def check_if_article_exists(supabase, title):
     """Comprueba si un artículo con el título dado ya existe en la base de datos."""
     normalized_title = title.lower().strip()
+    logging.info(f"Verificando existencia en DB por título (normalizado): '{normalized_title}'")
     try:
         response = supabase.table("amenazas").select("*").eq("titulo", normalized_title).execute()
-        logging.info(f"Respuesta de la base de datos para título '{title}': {response.data}")
+        logging.info(f"Respuesta de la base de datos para título normalizado '{normalized_title}': {response}")
         return len(response.data) > 0
     except Exception as e:
-        logging.error(f"Error al comprobar si existe el artículo en Supabase: {e}")
+        logging.error(f"Error al consultar la base de datos: {e}")
+        logging.exception(e)
         return False
 
-def scrape_website(website, num_articles_to_scrape=3, max_articles_per_website=10): # Optimización: num_articles_to_scrape y max_articles_per_website
+def scrape_website(website, num_articles_to_scrape=3, max_articles_per_website=10):
     """Extrae información de un sitio web y devuelve una lista de datos de artículos."""
     # Configuración de Supabase
-    logging.info("Comprobando las variables de entorno...")
+    logging.info("Comprobando variables de entorno...")
     SUPABASE_URL = os.environ.get("SUPABASE_URL")
     SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY")
 
-    logging.info(f"SUPABASE_URL: {SUPABASE_URL}")
-    logging.info(f"SUPABASE_ANON_KEY: {SUPABASE_ANON_KEY}")
-
     if not SUPABASE_URL or not SUPABASE_ANON_KEY:
-        logging.error("La URL o la clave de Supabase no se encontraron en las variables de entorno")
+        logging.error("URL o clave de Supabase no encontradas en variables de entorno.")
         return []
 
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
-    logging.info("Conexión a Supabase establecida correctamente.")
-
+    logging.info("Conexión a Supabase establecida.")
 
     try:
         headers = {
@@ -83,63 +81,71 @@ def scrape_website(website, num_articles_to_scrape=3, max_articles_per_website=1
         response.raise_for_status()
         soup = BeautifulSoup(response.content, "html.parser")
 
-        article_containers = soup.find_all("article")[:max_articles_per_website] # Optimizacion: Limitar la cantidad de articulos a buscar por website inicialmente
+        article_containers = soup.find_all("article")[:max_articles_per_website]
         article_links = []
-
-        for article in article_containers:
-            a_tag = article.find("a")
-            if a_tag and a_tag.has_attr('href'):
-                link = a_tag['href']
-                if not link.startswith("http"):
-                    link = "https://es.wired.com" + link # Asegurar el dominio base en caso de rutas relativas
-                article_links.append(link)
-
-        logging.info(f"Se encontraron {len(article_links)} enlaces de artículos en {website['url']}")
-        for link in article_links:
-            logging.info(f"  {link}")
-
         articles_data = []
-        articles_scraped_count = 0 # Contador de articulos scrapeados exitosamente para este website
-        for link in article_links:
-            if articles_scraped_count >= num_articles_to_scrape: # Optimizacion: Detener si ya se obtuvieron suficientes noticias
-                logging.info(f"Ya se obtuvieron {num_articles_to_scrape} noticias nuevas de {website['name']}, deteniendo la extracción.")
+        articles_scraped_count = 0
+
+        for article_container in article_containers: # Renombrar variable para claridad
+            if articles_scraped_count >= num_articles_to_scrape:
+                logging.info(f"Alcanzado el límite de {num_articles_to_scrape} noticias. Deteniendo extracción para {website['name']}.")
                 break
 
-            title, summary, publish_date = extract_article_data(link)
-            if title and summary:
-                logging.info(f"Título del artículo: {title}")
+            title_element = article_container.find("h3", class_="SummaryItemHedBase-hiFYpQ") # Selector CSS preciso para el título
+            link_element = article_container.find("a", class_="SummaryItemHedLink-civMjp") # Selector CSS preciso para el link
 
-                if check_if_article_exists(supabase, title): # Pasa la instancia de supabase
-                    logging.info(f"El artículo ya existe: {title}. Omitiendo y deteniendo la busqueda en este sitio (asumiendo orden cronológico).") # Optimizacion: Detener la busqueda si encuentra duplicado (asumiendo orden cronologico)
-                    break # Asumimos que los articulos estan ordenados cronologicamente, si ya existe uno, los siguientes probablemente tambien sean viejos o duplicados
-                else:
+            if title_element and link_element:
+                article_title_snippet = title_element.text.strip() # Extraer título del snippet
+                article_link = link_element['href']
+                if not article_link.startswith("http"):
+                    article_link = "https://es.wired.com" + article_link
+
+                logging.info(f"Título encontrado en snippet: '{article_title_snippet}'")
+
+                if check_if_article_exists(supabase, article_title_snippet): # Comprobar duplicado con título del snippet
+                    logging.info(f"Artículo con título '{article_title_snippet}' ya existe. Omitiendo.")
+                    continue # Saltar al siguiente artículo si ya existe
+
+                logging.info(f"Procesando nuevo artículo con título (snippet): '{article_title_snippet}' y enlace: {article_link}")
+
+                title, summary, publish_date = extract_article_data(article_link) # Extraer datos completos
+
+                if title and summary: # Verificar que newspaper3k extrajo título y resumen
+                    logging.info(f"Título del artículo (newspaper3k): '{title}'") # Log del título de newspaper3k
+                    if check_if_article_exists(supabase, title): # Doble verificación con título completo por si acaso
+                        logging.info(f"Artículo con título (newspaper3k) '{title}' ya existe (segunda verificación). Omitiendo.")
+                        continue
+
                     publish_date_str = publish_date.isoformat() if isinstance(publish_date, datetime) else None
                     data = {
                         "fuente": website["name"],
                         "titulo": title,
-                        "enlace": link,
+                        "enlace": article_link,
                         "resumen": summary,
                         "fecha_publicacion": publish_date_str,
                         "fecha_actualizacion": datetime.utcnow().isoformat()
                     }
                     logging.info(f"Datos a insertar: {data}")
-
                     try:
                         data_response = supabase.table("amenazas").insert(data, returning="minimal").execute()
-                        logging.info(f"Artículo insertado correctamente: {title}")
-                        articles_scraped_count += 1 # Incrementar el contador solo si se inserta correctamente
+                        logging.info(f"Artículo insertado en la base de datos: {title}")
+                        articles_scraped_count += 1
+                        articles_data.append(data)
                     except Exception as e:
-                        logging.error(f"Error al insertar el artículo en Supabase: {e}")
+                        logging.error(f"Error al insertar en Supabase: {e}")
                         logging.exception(e)
-                    articles_data.append(data)
+                else:
+                    logging.warning(f"No se pudo extraer título o resumen con newspaper3k del enlace: {article_link}. Omitiendo.")
+
         return articles_data
 
     except requests.exceptions.RequestException as e:
-        logging.error(f"Fallo en la solicitud para {website['url']}: {e}")
+        logging.error(f"Error de solicitud web para {website['url']}: {e}")
         return []
     except Exception as e:
         logging.exception(f"Error inesperado al procesar {website['url']}: {e}")
         return []
+
 
 def main():
     """Función principal."""
@@ -147,14 +153,14 @@ def main():
         {"name": "Wired en Español", "url": "https://es.wired.com/tag/ciberseguridad"}
     ]
     all_articles = []
-    num_articles_per_run = 3 # Optimizacion: Desea al menos 3 noticias por ejecucion
+    num_articles_per_run = 3
     for website in WEBSITES:
-        logging.info(f"Extrayendo: {website['name']}")
-        articles = scrape_website(website, num_articles_to_scrape=num_articles_per_run) # Pasa num_articles_to_scrape a scrape_website
+        logging.info(f"Extrayendo noticias de: {website['name']}")
+        articles = scrape_website(website, num_articles_to_scrape=num_articles_per_run)
         all_articles.extend(articles)
-        logging.info(f"Extracción finalizada: {website['name']}")
+        logging.info(f"Extracción de {website['name']} finalizada.")
 
-    logging.info("Extracción completada.")
+    logging.info("Extracción completada para todos los sitios.")
 
     with open("data/articles.json", "w", encoding="utf-8") as f:
         json.dump(all_articles, f, indent=4, ensure_ascii=False)
