@@ -51,8 +51,7 @@ def check_if_article_exists(supabase, title):
     logging.info(f"Verificando existencia en DB por título (normalizado): '{normalized_title}'")
     try:
         query = supabase.table("amenazas").select("*").eq("titulo", normalized_title) # Construye el objeto de consulta
-        query_url = query.url  # Intenta obtener la URL de esta manera (cambio aquí)
-        logging.info(f"Consulta Supabase generada (URL): {query_url}") # Log de la URL real
+        logging.info(f"Título normalizado usado en la consulta: '{normalized_title}'") # Registro del título normalizado
         response = query.execute() # Ejecuta la consulta
         logging.info(f"Respuesta de la base de datos para título normalizado '{normalized_title}': {response}")
         return len(response.data) > 0
