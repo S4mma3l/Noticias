@@ -2,7 +2,7 @@ name: Scrape and Update Data
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # Se ejecuta cada 12 horas'
+    - cron: '0 0 */2 * *'  # Se ejecuta cada 2 días a medianoche
   workflow_dispatch:
 
 jobs:
