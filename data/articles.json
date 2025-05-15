@@ -1,10 +1,10 @@
 [
     {
         "fuente": "Wired en Español",
-        "titulo": "Tribunal de Estados Unidos falla contra la empresa creadora del software espía Pegasus",
-        "enlace": "https://es.wired.com/articulos/tribunal-de-estados-unidos-falla-contra-la-empresa-creadora-del-software-espia-pegasus",
-        "resumen": "WhatsApp tomó medidas inmediatas para corregir la vulnerabilidad e inició una investigación para esclarecer el incidente.\n\"Esto debería ser una llamada de atención para las empresas tecnológicas, los gobiernos y todos los usuarios de internet.\nUna decisión importante, que convirtió a la plataforma de mensajería en la primera en adoptar una postura firme contra las empresas que venden software malicioso.\nMéxico es el mayor cliente de Pegasus con un gasto de 60 millones de dólares The New York Times afirma que la Secretaría de Defensa Nacional (Sedena) es la única entidad del país que opera con Pegasus en la actualidad.\nEn general, Meta se mostró más que satisfecha con el veredicto, calificándolo como: \"Un importante paso adelante para la privacidad y la seguridad, que representa la primera victoria contra el desarrollo y el uso de programas espía ilegales que amenazan la seguridad y la privacidad de todos\".",
-        "fecha_publicacion": "2025-05-07T15:21:12.128000+00:00",
-        "fecha_actualizacion": "2025-05-13T00:50:07.468626"
+        "titulo": "Una nueva función de Android busca poner fin a los mensajes fraudulentos",
+        "enlace": "https://es.wired.com/articulos/detectar-fraudes-en-mensajes-de-google-ahora-sera-posible-gracias-a-una-nueva-funcion-de-android",
+        "resumen": "En vísperas del lanzamiento de Android 16 en la conferencia de desarrolladores Google I/O, la empresa anunció que está ampliando la función de detección de estafas de la aplicación Mensajes de Google, conocida como \"Detección de Estafas\", para alertar sobre mensajes potencialmente fraudulentos.\nEsta función se combina con otras herramientas de seguridad basadas en inteligencia artificial, las cuales se ejecutan localmente en los dispositivos de los usuarios y no comparten datos ni el contenido de los mensajes con la empresa.\nCuando las personas hacen clic en los enlaces e introducen sus datos, incluida la información de pago, los estafadores los roban.\nEl mensaje añade que la \"capacidad legal\" para conducir puede ser revocada si no se efectúa el pago.\nEn los últimos meses, Meta, empresa propietaria de WhatsApp, Messenger e Instagram, introdujo advertencias emergentes cuando se solicita a los usuarios realizar pagos dentro de los chats.",
+        "fecha_publicacion": "2025-05-14T17:15:49.735000+00:00",
+        "fecha_actualizacion": "2025-05-15T00:48:42.653906"
     }
 ]
