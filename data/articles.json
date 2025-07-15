@@ -1,10 +1,10 @@
 [
     {
         "fuente": "Wired en Español",
-        "titulo": "Reconocimiento facial en México avanza sin regulación y pone en riesgo derechos ciudadanos, según R3D",
-        "enlace": "https://es.wired.com/articulos/reconocimiento-facial-en-mexico-avanza-sin-regulacion-y-pone-en-riesgo-derechos-ciudadanos-segun-r3d",
-        "resumen": "La instalación de sistemas de reconocimiento facial en espacios públicos es cada vez más común en México.\nSin embargo, el avance de esta controvertida tecnología ocurre en un contexto de escasa transparencia y débil regulación, lo que pone en riesgo los derechos de la ciudadanía.\nEstos sistemas operan en la opacidad: las personas no saben que están siendo vigiladas ni cómo se usan sus datos”, advierte el documento.\nAunque se presenta como voluntario, los pasajeros no cuentan con opciones claras, lo que en la práctica lo vuelve obligatorio.\nSe recolectan datos sensibles como fotografías faciales, credenciales de elector o pasaportes, geolocalización y datos del dispositivo móvil.",
-        "fecha_publicacion": "2025-07-09T00:07:53.736000+00:00",
-        "fecha_actualizacion": "2025-07-13T00:59:00.592137"
+        "titulo": "Los hackers han hallado cómo explotar Gemini para robar los datos de tu Gmail",
+        "enlace": "https://es.wired.com/articulos/los-hackers-han-hallado-como-explotar-gemini-para-robar-los-datos-de-tu-gmail",
+        "resumen": "Los investigadores, en el informe, explican que en el caso de Gemini, es posible priorizar el comando utilizando las etiquetas <Admin> ... </Admin>.\nPara evitar que la víctima note la presencia de comandos dirigidos a la IA, basta con hacer invisible el texto.\nSus posibles repercusiones en la seguridad, sobre todo de cara al lanzamiento de nuevas funciones, están aún por evaluar.\nLa petición de resumir un correo electrónico, además, es una de las funciones basadas en IA más utilizadas en el ecosistema Workspace de Google.\nEl comando malicioso, en el ejemplo publicado en el blog de 0din, simplemente se inserta en la parte inferior del mensaje de correo electrónico, 'ocultándolo' al establecer el color en blanco.",
+        "fecha_publicacion": "2025-07-14T16:05:27.535000+00:00",
+        "fecha_actualizacion": "2025-07-15T00:55:19.136153"
     }
 ]
