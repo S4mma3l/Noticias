@@ -1,10 +1,10 @@
 [
     {
         "fuente": "Wired en Español",
-        "titulo": "Los hackers han hallado cómo explotar Gemini para robar los datos de tu Gmail",
-        "enlace": "https://es.wired.com/articulos/los-hackers-han-hallado-como-explotar-gemini-para-robar-los-datos-de-tu-gmail",
-        "resumen": "Los investigadores, en el informe, explican que en el caso de Gemini, es posible priorizar el comando utilizando las etiquetas <Admin> ... </Admin>.\nPara evitar que la víctima note la presencia de comandos dirigidos a la IA, basta con hacer invisible el texto.\nSus posibles repercusiones en la seguridad, sobre todo de cara al lanzamiento de nuevas funciones, están aún por evaluar.\nLa petición de resumir un correo electrónico, además, es una de las funciones basadas en IA más utilizadas en el ecosistema Workspace de Google.\nEl comando malicioso, en el ejemplo publicado en el blog de 0din, simplemente se inserta en la parte inferior del mensaje de correo electrónico, 'ocultándolo' al establecer el color en blanco.",
-        "fecha_publicacion": "2025-07-14T16:05:27.535000+00:00",
-        "fecha_actualizacion": "2025-07-15T00:55:19.136153"
+        "titulo": "Tecnología y psicología: así funciona el intrincado sistema chino para censurar internet",
+        "enlace": "https://es.wired.com/articulos/tecnologia-y-psicologia-asi-funciona-el-intrincado-sistema-chino-para-censurar-internet",
+        "resumen": "Un firewall o cortafuegos es un sistema de seguridad que filtra y controla el tráfico de datos de una red o dispositivo.\nEsta herramienta impide que una persona acceda a determinados sitios en internet o bloquea información de ciertas fuentes para que no llegue al espacio virtual de un usuario.\nSi crees que la batalla se sigue jugando entre Estados Unidos y Corea, estás viendo la película equivocada.\nHay un grupo de expertos que dice que es tiempo de dejar de imaginarlo como un gran muro o cortafuegos que bloquea cualquier información extranjera.\nLa investigación propone comprender el sistema por medio de tres niveles básicos:",
+        "fecha_publicacion": "2025-07-15T21:23:59.726000+00:00",
+        "fecha_actualizacion": "2025-07-17T00:54:50.922145"
     }
 ]
